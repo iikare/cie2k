@@ -1,7 +1,7 @@
 CXX=clang++
 C=clang
 LD=-fuse-ld=mold
-CFLAGS=--std=c++20 -Wall -Wextra $(NONSTD)$(RELFLAGS)$(DEPDEF)
+CFLAGS=--std=c++20 -Og -g -Wall -Wextra $(NONSTD)$(RELFLAGS)$(DEPDEF)
 
 PREREQ_DIR=@mkdir -p $(@D)
 
@@ -16,7 +16,11 @@ OBJS=$(patsubst $(SRCDIR)/%.cc, $(BUILDDIR)/%.o, $(SRCS))
 
 all:
 
-	./gen/gen.sh
+	@echo
+	@echo "generating test set"
+	@echo
+
+	@./gen/gen.sh
 	@$(MAKE) --no-print-directory $(NAME)
 
 	@echo
@@ -31,11 +35,11 @@ re: clean
 
 $(NAME): $(OBJS) | $(@D)
 	$(PREREQ_DIR)
-	$(CXX) $(CFLAGSSTD) -o $(NAME) $(OBJS) $(LFLAGS)
+	$(CXX) $(CFLAGS) -o $(NAME) $(OBJS) $(LFLAGS)
 
 $(OBJS): $(BUILDDIR)/%.o: $(SRCDIR)/%.cc
 	$(PREREQ_DIR)
-	$(CXX) $(CFLAGSSTD) -o $@ -c $<
+	$(CXX) $(CFLAGS) -o $@ -c $<
 
 clean:
 	@echo
