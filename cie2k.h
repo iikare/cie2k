@@ -13,36 +13,51 @@ T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
   // as described in "The CIEDE2000 Color-Difference Formula: Implementation Notes, 
   // Supplementary Test Data, and Mathematical Observations" by Gaurav Sharma, Wencheng Wu, Edul N. Dalal
 
+  // utility lambdas
+  constexpr auto to_rad = [&] (const T val) {
+    return (val*M_PI)/180.0;
+  };
+  constexpr auto to_deg = [&] (const T val) {
+    return (180.0/M_PI)*val;
+  };
+
   // eq.1 omitted
 
   // eq.2
-  T C1 = sqrt(a1*a1+b1*b1);
-  T C2 = sqrt(a2*a2+b2*b2);
+  T C1 = sqrt((a1*a1)+(b1*b1));
+  T C2 = sqrt((a2*a2)+(b2*b2));
 
   // eq.3
-  T C_bar = 0.5*(C1+C2);
+  T C_bar = (C1+C2)/2.0;
 
   // eq.4
-  T C_bar_7 = pow(C_bar, 7);
-  constexpr T eq_25p7 = 25.0*25.0*25.0*25.0*25.0*25.0*25.0;
-  T G = 0.5*(1.0-sqrt(C_bar_7/(C_bar_7+eq_25p7)));
+  constexpr T eq_25p7 = 6103515625.0;
+  T G = 0.5*(1.0-sqrt(pow(C_bar,7)/(pow(C_bar,7)+eq_25p7)));
 
   // eq.5
   T a1_prime = (1.0+G)*a1;
   T a2_prime = (1.0+G)*a2;
 
   // eq.6
-  T C1_prime = sqrt(a1_prime*a1_prime + b1*b1);
-  T C2_prime = sqrt(a2_prime*a2_prime + b2*b2);
+  T C1_prime = sqrt((a1_prime*a1_prime)+(b1*b1));
+  T C2_prime = sqrt((a2_prime*a2_prime)+(b2*b2));
 
   // eq.7
-  T h1_prime = 0;
-  if (!(b1 == 0 && a1_prime)) {
-    h1_prime = atan2(b1, a1_prime) + 2*M_PI;
+  T h1_prime = 0.0;
+  if (!(b1 == 0 && a1_prime == 0)) {
+    h1_prime = atan2(b1, a1_prime);
+    if (h1_prime < 0.0) {
+      h1_prime += 2*M_PI;
+    }
+    h1_prime = to_deg(h1_prime);
   }
-  T h2_prime = 0;
-  if (!(b2 == 0 && a2_prime)) {
-    h2_prime = atan2(b2, a2_prime) + 2*M_PI;
+  T h2_prime = 0.0;
+  if (!(b2 == 0 && a2_prime == 0)) {
+    h2_prime = atan2(b2, a2_prime); 
+    if (h2_prime < 0.0) {
+      h2_prime += 2*M_PI;
+    }
+    h2_prime = to_deg(h2_prime);
   }
 
   // eq.8
@@ -55,13 +70,14 @@ T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
   T delta_h_prime = 0;
   if (C1_prime*C2_prime != 0) {
     T h_diff = h2_prime-h1_prime;
-    if (fabs(h_diff) <= M_PI) {
-      delta_h_prime = h_diff;
-    }
-    else if (h_diff > M_PI) {
+    //if (fabs(h_diff) <= M_PI) {
+    delta_h_prime = h_diff;
+    //}
+    if (h_diff > M_PI) {
       delta_h_prime = h_diff - 2*M_PI;
     }
-    else if (h_diff < -M_PI) {
+    else {
+    //else if (h_diff < -M_PI) {
       delta_h_prime = h_diff + 2*M_PI;
     }
   }
@@ -82,37 +98,31 @@ T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
       h_bar_prime = h_bar_prime/2.0;
     }
     else {
-      if (h1_prime+h2_prime < 360) {
-        h_bar_prime = h_bar_prime/2.0 + M_PI;
+      if (h1_prime+h2_prime < 2*M_PI) {
+        h_bar_prime = (h_bar_prime+2*M_PI)/2.0;
       }
       else {
-        h_bar_prime = h_bar_prime/2.0 - M_PI;
+        h_bar_prime = (h_bar_prime-2*M_PI)/2.0;
       }
     }
   }
 
-  // utility lambda
-  constexpr auto to_rad = [&] (const T val) {
-    return val*M_PI/180.0;
-  };
-
   // eq.15
   T t = 1.0 - 0.17*cos(h_bar_prime-to_rad(30.0))
-            - 0.24*cos(h_bar_prime*2.0)
+            + 0.24*cos(h_bar_prime*2.0)
             + 0.32*cos(h_bar_prime*3.0+to_rad(6.0))
             - 0.20*cos(h_bar_prime*4.0)-to_rad(63.0);
 
   // eq.16
-  T dt_intm = (h_bar_prime-to_rad(275.0))/to_rad(25.0); 
-  T delta_theta = to_rad(30.0)*exp(-dt_intm*dt_intm);
+  T delta_theta = to_rad(30.0)*exp(-pow((h_bar_prime-to_rad(275.0))/to_rad(25.0),2.0)); 
 
   // eq.17
-  T C_bar_prime_7 = pow(C_bar_prime, 7);
-  T R_C = 2*sqrt(C_bar_prime_7/(C_bar_prime_7+eq_25p7));
+  //T C_bar_prime_7 = pow(C_bar_prime, 7);
+  T R_C = 2*sqrt(pow(C_bar_prime,7)/(pow(C_bar_prime,7)+eq_25p7));
 
   // eq.18
   T L_50_2 = (L_bar_prime-50)*(L_bar_prime-50);
-  T S_L = 1.0 + 0.015*L_50_2/sqrt(20+L_50_2);
+  T S_L = 1.0 + (0.015*L_50_2)/sqrt(20+L_50_2);
 
   // eq.19
   T S_C = 1.0 + 0.045*C_bar_prime;

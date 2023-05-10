@@ -9,8 +9,8 @@ with open('gen/data.txt') as raw_data:
 
 print("#pragma once")
 print("constexpr unsigned int test_set_size = 34;")
-print("constexpr unsigned int test_item_size = 23;")
-print("constexpr double test_set[34][23] = {")
+print("constexpr unsigned int test_item_size = 20;")
+print("constexpr double test_set[34][20] = {")
 for i in range(len(ent)):
     if i % 23 == 0:
         print("  {", end="")
