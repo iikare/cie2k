@@ -1,4 +1,4 @@
 #!/bin/sh
 
 
-python gen/extract.py > test.h
+python gen/extract.py > gen/test.h
