@@ -5,17 +5,17 @@
 
 namespace cie2k {
 
-enum class FUNC_TYPE {
+enum class TYPE {
   CIE_00,
   CIE_94,
   CIE_76
 };
 
-template<class T, FUNC_TYPE f = FUNC_TYPE::CIE_00>
+template<class T, TYPE f = TYPE::CIE_00>
 T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
   static_assert(std::is_floating_point<T>::value, "cie2k deltaE must be of floating-point type"); 
 
-  if constexpr (f == FUNC_TYPE::CIE_00) {
+  if constexpr (f == TYPE::CIE_00) {
 
     // CIEDE2000 implementation
     // as described in "The CIEDE2000 Color-Difference Formula: Implementation Notes, 
@@ -147,7 +147,7 @@ T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
     return deltaE;
 
   }
-  else if constexpr (f == FUNC_TYPE::CIE_94) {
+  else if constexpr (f == TYPE::CIE_94) {
     struct lchIntermediary {
       T l;
       T c;
@@ -203,7 +203,7 @@ inst_m_check(b);
 
 // requires a type with "l", "a", "b" fields
 // these fields must satisfy std::is_floating_point<T>
-template<class V, FUNC_TYPE f = FUNC_TYPE::CIE_00>
+template<class V, TYPE f = TYPE::CIE_00>
 auto deltaE(V lab1, V lab2) {
   static_assert(m_check(V, l) && 
                 m_check(V, a) &&
