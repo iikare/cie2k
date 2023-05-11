@@ -145,9 +145,7 @@ T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
   class m_check_##m_name {                                                \
     private:                                                              \
       typedef char yes_t;                                                 \
-      typedef long no_t;                                                  \
       template <class U> static yes_t test(decltype(&U::m_name));         \
-      template <class U> static no_t  test(...);                          \
     public:                                                               \
       static constexpr bool value = sizeof(test<T>(0)) == sizeof(yes_t);  \
   }
