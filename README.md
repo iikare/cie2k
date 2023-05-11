@@ -12,4 +12,4 @@ this test program uses data supplied by the authors of the aforementioned paper.
 
 to use the algorithm call `cie2k::deltaE<T>()` (implemented in `src/cie2k.h`) following the specifications given.
 
-to specify an explicit algorithm to use (default is CIEDE2000), use `cie2k::deltaE<T, cie2k::FUNC_TYPE::*>()`.
+to specify an explicit algorithm to use (default is CIEDE2000), use `cie2k::deltaE<T, cie2k::TYPE::*>()`.
