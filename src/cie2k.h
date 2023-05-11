@@ -204,7 +204,7 @@ inst_m_check(b);
 // requires a type with "l", "a", "b" fields
 // these fields must satisfy std::is_floating_point<T>
 template<class V, TYPE f = TYPE::CIE_00>
-auto deltaE(V lab1, V lab2) {
+auto deltaE(const V& lab1, const V& lab2) {
   static_assert(m_check(V, l) && 
                 m_check(V, a) &&
                 m_check(V, b), 
