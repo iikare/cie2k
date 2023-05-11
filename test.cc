@@ -12,31 +12,37 @@ bool fp_eq(float a, float b) {
   return std::string(a_buf) == std::string(b_buf);
 }
 
+struct LAB {
+  double l;
+  double a;
+  double b;
+};
+
 int main() {
 
   unsigned int test_num = 0;
   unsigned int test_pass = 0;
 
-  // 0:  l1           []
-  // 1:  a1           []
-  // 2:  b1           []
-  // 3:  a1_prime     []
-  // 4:  C1_prime     []
-  // 5:  h1_prime     []
-  // 6:  h_bar_prime  []
-  // 7:  G            []
-  // 8:  T (t)        []
-  // 9:  S_L          []
-  // 10: S_C          []
-  // 11: S_H          []
-  // 12: R_T          [] 
-  // 13: deltaE       []
-  // 14: l2           []
-  // 15: a2           [] 
-  // 16: b2           []
-  // 17: a2_prime     []
-  // 18: C2_prime     []
-  // 19: h2_prime     []
+  // 0:  l1           [OK]
+  // 1:  a1           [OK]
+  // 2:  b1           [OK]
+  // 3:  a1_prime     [OK]
+  // 4:  C1_prime     [OK]
+  // 5:  h1_prime     [OK]
+  // 6:  h_bar_prime  [OK]
+  // 7:  G            [OK]
+  // 8:  T (t)        [OK]
+  // 9:  S_L          [OK]
+  // 10: S_C          [OK]
+  // 11: S_H          [OK]
+  // 12: R_T          [OK] 
+  // 13: deltaE       [OK]
+  // 14: l2           [OK]
+  // 15: a2           [OK] 
+  // 16: b2           [OK]
+  // 17: a2_prime     [OK]
+  // 18: C2_prime     [OK]
+  // 19: h2_prime     [OK]
 
   constexpr unsigned int idx  = 13;
 
@@ -45,8 +51,8 @@ int main() {
     test_num++;
 
     const double expectDE = test_item[idx];
-    const double actualDE = cie2k::deltaE(test_item[0] , test_item[1] , test_item[2],
-                                          test_item[14], test_item[15], test_item[16]);
+    const double actualDE = cie2k::deltaE<LAB>({test_item[0] , test_item[1] , test_item[2]},
+                                               {test_item[14], test_item[15], test_item[16]});
 
     std::ostringstream ss;
     ss << std::setw(2) << std::setfill('0') << test_num;

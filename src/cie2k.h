@@ -140,8 +140,49 @@ T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
 
 }
 
+#define inst_m_check(m_name)                                              \
+  template <class T>                                                      \
+  class m_check_##m_name {                                                \
+    private:                                                              \
+      typedef char yes_t;                                                 \
+      typedef long no_t;                                                  \
+      template <class U> static yes_t test(decltype(&U::m_name));         \
+      template <class U> static no_t  test(...);                          \
+    public:                                                               \
+      static constexpr bool value = sizeof(test<T>(0)) == sizeof(yes_t);  \
+  }
+
+#define m_check(target_class, m_name)  m_check_##m_name<target_class>::value
+
+inst_m_check(l);
+inst_m_check(a);
+inst_m_check(b);
+
+// requires a type with "l", "a", "b" fields
+// these fields must satisfy std::is_floating_point<T>
+template<class V>
+auto deltaE(V lab1, V lab2) {
+  static_assert(m_check(V, l) && 
+                m_check(V, a) &&
+                m_check(V, b), 
+                "type passed to cie2k::deltaE() does not satisfy function constraints");
+
+  static_assert(std::is_floating_point<decltype(lab1.l)>::value &&
+                std::is_floating_point<decltype(lab1.a)>::value &&
+                std::is_floating_point<decltype(lab1.b)>::value &&
+                std::is_floating_point<decltype(lab2.l)>::value &&
+                std::is_floating_point<decltype(lab2.a)>::value &&
+                std::is_floating_point<decltype(lab1.b)>::value,
+                "type of members passed to cie2k::deltaE() does not satisfy function constraints");
+  
+  static_assert(std::is_same<decltype(lab1.l), decltype(lab1.a)>::value &&
+                std::is_same<decltype(lab1.a), decltype(lab1.b)>::value &&
+                std::is_same<decltype(lab1.a), decltype(lab2.a)>::value &&
+                std::is_same<decltype(lab2.l), decltype(lab2.a)>::value &&
+                std::is_same<decltype(lab2.a), decltype(lab2.b)>::value,
+                "type of members passed to cie2k::deltaE() is not consistent");
+
+  return deltaE<decltype(lab1.l)>(lab1.l, lab1.a, lab1.b, lab2.l, lab2.a, lab2.b);
 }
 
-
-
-
+}
