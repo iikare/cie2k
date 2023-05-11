@@ -1,3 +1,0 @@
-clang
-%cc -std=c++20
-%h -std=c++20
