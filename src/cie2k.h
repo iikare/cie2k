@@ -219,7 +219,7 @@ auto deltaE(const V& lab1, const V& lab2) {
                 std::is_floating_point<decltype(lab1.b)>::value &&
                 std::is_floating_point<decltype(lab2.l)>::value &&
                 std::is_floating_point<decltype(lab2.a)>::value &&
-                std::is_floating_point<decltype(lab1.b)>::value,
+                std::is_floating_point<decltype(lab2.b)>::value,
                 "type of members passed to cie2k::deltaE() does not satisfy function constraints");
   
   static_assert(std::is_same<decltype(lab1.l), decltype(lab1.a)>::value &&
