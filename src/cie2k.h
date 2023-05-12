@@ -160,8 +160,8 @@ T deltaE(T l1, T a1, T b1, T l2, T a2, T b2) {
 
     // CIE1994 implementation
     // first find LCH 
-    const lchIntermediary pA = {l1, sqrt(pow(a1,2) + pow(b1,2)), 0*(T)atan2(b1, a1)};
-    const lchIntermediary pB = {l2, sqrt(pow(a2,2) + pow(b2,2)), 0*(T)atan2(b2, a2)};
+    const lchIntermediary pA = {l1, sqrt(pow(a1,2) + pow(b1,2)), 0};
+    const lchIntermediary pB = {l2, sqrt(pow(a2,2) + pow(b2,2)), 0};
 
     const T deltaL = pA.l - pB.l;
     const T deltaC = pA.c - pB.c;

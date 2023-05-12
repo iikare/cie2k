@@ -1,16 +1,12 @@
 ent = []
-with open('gen/data.txt') as raw_data:
+with open('gen/data00.txt') as raw_data:
     for line in raw_data:
         # print (line.strip())
         ent.append(line.strip())
 
-# print(ent)
-
-
-print("#pragma once")
-print("constexpr unsigned int test_set_size = 34;")
-print("constexpr unsigned int test_item_size = 20;")
-print("constexpr double test_set[34][20] = {")
+print("constexpr unsigned int test00_set_size = 34;")
+print("constexpr unsigned int test00_item_size = 20;")
+print("constexpr double test00_set[34][20] = {")
 for i in range(len(ent)):
     if i % 23 == 0:
         print("  {", end="")

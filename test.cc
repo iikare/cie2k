@@ -22,6 +22,7 @@ int main() {
 
   unsigned int test_num = 0;
   unsigned int test_pass = 0;
+  unsigned int test_total = test00_set_size+test94_set_size;
 
   // 0:  l1           [OK]
   // 1:  a1           [OK]
@@ -44,13 +45,18 @@ int main() {
   // 18: C2_prime     [OK]
   // 19: h2_prime     [OK]
 
-  constexpr unsigned int idx  = 13;
+  constexpr unsigned int idx00 = 13;
+  constexpr unsigned int idx94 = 6;
 
-  for (const auto& test_item : test_set) {
+  logE();
+  logW(LL_INFO, "testing CIEDE2000 algorithm");
+  logE();
+
+  for (const auto& test_item : test00_set) {
 
     test_num++;
 
-    const double expectDE = test_item[idx];
+    const double expectDE = test_item[idx00];
     const double actualDE = cie2k::deltaE<LAB>({test_item[0] , test_item[1] , test_item[2]},
                                                {test_item[14], test_item[15], test_item[16]});
 
@@ -74,7 +80,46 @@ int main() {
     }
   }
 
-  logW(test_pass != test_set_size ? LL_CRIT : LL_INFO, std::to_string(test_pass)+"/"+std::to_string(test_set_size), "tests passed");
+  // 0:  l1           [OK]
+  // 1:  a1           [OK]
+  // 2:  b1           [OK]
+  // 3:  l2           [OK]
+  // 4:  a2           [OK]
+  // 5:  b2           [OK]
+  // 6:  deltaE       [OK]
+ 
+  logE();
+  logW(LL_INFO, "testing CIE94 algorithm");
+  logE();
+  
+  for (const auto& test_item : test94_set) {
+
+    test_num++;
+
+    const double expectDE = test_item[idx94];
+    const double actualDE = cie2k::deltaE<LAB, cie2k::TYPE::CIE_94>({test_item[0], test_item[1], test_item[2]},
+                                                                    {test_item[3], test_item[4], test_item[5]});
+
+    std::ostringstream ss;
+    ss << std::setw(2) << std::setfill('0') << test_num;
+    string s_test_num = ss.str();
+
+    ss.str("");
+    ss << std::fixed << std::setw(9) << std::setfill(' ') << (actualDE - expectDE);
+    string margin = ss.str();
+
+    bool correct = fp_eq(expectDE, actualDE);
+    if (correct) {
+      logW(LL_INFO, " [PASS] - test", s_test_num, "| margin: ("+margin+")");
+      test_pass++;
+    }
+    else {
+      logW(LL_WARN, "[FAIL] - test", test_num);
+      logW(LL_WARN, "         expecting", expectDE, "got", actualDE);
+    }
+  }
+
+  logW(test_pass != test_total ? LL_CRIT : LL_INFO, std::to_string(test_pass)+"/"+std::to_string(test_total), "tests passed");
 
   return 0;
 }

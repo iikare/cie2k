@@ -1,4 +1,7 @@
 #!/bin/sh
 
-
-python gen/extract.py > gen/test.h
+echo "#pragma once" > gen/test.h
+echo >> gen/test.h
+python gen/ext00.py >> gen/test.h
+echo >> gen/test.h
+python gen/ext94.py >> gen/test.h
