@@ -1,7 +1,7 @@
 CXX=clang++
 C=clang
 LD=-fuse-ld=mold
-CFLAGS=--std=c++20 -Og -g -Wall -Wextra $(NONSTD)$(RELFLAGS)$(DEPDEF)
+CFLAGS=--std=c++17 -Og -g -Wall -Wextra $(NONSTD)$(RELFLAGS)$(DEPDEF)
 
 PREREQ_DIR=@mkdir -p $(@D)
 

@@ -1,7 +1,8 @@
 # cie2k
 template-based header-only CIE algorithm implementations.
 
-this library supports CIEDE2000, CIE94, and CIE76 color distance algorithms.
+this library supports CIEDE2000, CIE94, and CIE76 color distance algorithms. 
+note that `--std=C++17` or higher is required.
 
 implementation of CIEDE2000 follows the algorithm described in _The CIEDE2000 Color-Difference Formula: Implementation Notes, 
 Supplementary Test Data, and Mathematical Observations" by Gaurav Sharma, Wencheng Wu, Edul N. Dalal_.
