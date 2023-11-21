@@ -22,3 +22,6 @@
 # Executables
 *.exe
 *.out
+
+
+bin/cie2k_test
